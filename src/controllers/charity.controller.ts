@@ -7,28 +7,26 @@ import {
   param,
 } from '@loopback/rest';
 
-export class CharityController {
+export class UserController {
   constructor(
-    @repository(CharityRepository) protected charityRepo: CharityRepository,
+    @repository(CharityRepository) protected userRepo: CharityRepository,
   ) {}
 
-  @get('/charity')
-  async findCharity(): Promise<Charity[]> {
-    return await this.charityRepo.find();
+  @get('/users')
+  async findUsers(): Promise<Charity[]> {
+    return await this.userRepo.find();
   }
 
-  @get('/charity/{name}')
-  async findCharitybyName(@param.path.string('name') name: string ): Promise<Charity> {
+  @get('/users/{id}')
+  async findUsersById(@param.path.number('id') id: number): Promise<Charity> {
     // Check for valid ID
-    let charityExists: boolean = !!(await this.charityRepo.count({ name }));
+    let userExists: boolean = !!(await this.userRepo.count({ id }));
 
-    if (!charityExists) {
-      throw new HttpErrors.BadRequest(`charity ${name} does not exist`);
+    if (!userExists) {
+      throw new HttpErrors.BadRequest(`user ID ${id} does not exist`);
     }
 
-    return await this.charityRepo.findName(name);
+    return await this.userRepo.findById(name);
   }
   
 }
-
-
