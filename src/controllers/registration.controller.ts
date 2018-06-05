@@ -1,32 +1,31 @@
-// Uncomment these imports to begin using these cool features!
-
-// import {inject} from @loopback/context;
-
-import { repository } from "@loopback/repository";
-import { post, get, requestBody } from "@loopback/rest";
-import { RegistrationRepository } from "../repositories/registration.repository";
-import { Registration } from "../models/registration";
+import { repository } from '@loopback/repository';
+import { UserRepository } from '../repositories';
+import { User } from '../models';
+import {
+  HttpErrors,
+  post,
+  requestBody,
+} from '@loopback/rest';
 
 export class RegistrationController {
   constructor(
-    @repository(RegistrationRepository.name) private registrationRepo: RegistrationRepository
+    @repository(UserRepository) protected userRepo: UserRepository,
   ) {}
 
+  @post('/registration')
+  async registerUser(@requestBody() user: User): Promise<User> {
+    // Check that required fields are supplied
+    if (!user.email || !user.password) {
+      throw new HttpErrors.BadRequest('missing data');
+    }
 
-  @get('/registrations')
+    // Check that user does not already exist
+    let userExists: boolean = !!(await this.userRepo.count({ email: user.email }));
 
-  getRegistrations() : Array<object> {
+    if (userExists) {
+      throw new HttpErrors.BadRequest('user already exists');
+    }
 
-    return [
-      { name: "Hawaii",
-        topping: "pineapple"}
-    ];
-  }
-  @post("/registrations")
-  requestRegistration(@requestBody() registration: any): object {
-    registration.requested = "yes";
-    return registration;
+    return await this.userRepo.create(user);
   }
 }
-
-

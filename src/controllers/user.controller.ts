@@ -1,32 +1,31 @@
-// Uncomment these imports to begin using these cool features!
-
-// import {inject} from @loopback/context;
-
-import { repository } from "@loopback/repository";
-import { post, get, requestBody } from "@loopback/rest";
-import { UserRepository } from "../repositories/user.repository";
-import { User } from "../models/user";
+import { repository } from '@loopback/repository';
+import { UserRepository } from '../repositories';
+import { User } from '../models';
+import {
+  HttpErrors,
+  get,
+  param,
+} from '@loopback/rest';
 
 export class UserController {
   constructor(
-    @repository(UserRepository.name) private userRepo: UserRepository
+    @repository(UserRepository) protected userRepo: UserRepository,
   ) {}
 
-
   @get('/users')
-
-  getUsers() : Array<object> {
-
-    return [
-      { name: "Mica MacInnes",
-        email: "micamac@umich.edu"}
-    ];
+  async findUsers(): Promise<User[]> {
+    return await this.userRepo.find();
   }
-  @post("/users")
-  requestUser(@requestBody() user: any): object {
-    user.requested = "yes";
-    return user;
+
+  @get('/users/{id}')
+  async findUsersById(@param.path.number('id') id: number): Promise<User> {
+    // Check for valid ID
+    let userExists: boolean = !!(await this.userRepo.count({ id }));
+
+    if (!userExists) {
+      throw new HttpErrors.BadRequest(`user ID ${id} does not exist`);
+    }
+
+    return await this.userRepo.findById(id);
   }
 }
-
-
