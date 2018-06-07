@@ -7,7 +7,7 @@ import {
   param,
 } from '@loopback/rest';
 
-export class UserController {
+export class CharityController {
   constructor(
     @repository(CharityRepository) protected userRepo: CharityRepository,
   ) {}

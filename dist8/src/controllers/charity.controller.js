@@ -16,38 +16,37 @@ const repository_1 = require("@loopback/repository");
 const repositories_1 = require("../repositories");
 const rest_1 = require("@loopback/rest");
 let CharityController = class CharityController {
-    constructor(charityRepo) {
-        this.charityRepo = charityRepo;
+    constructor(userRepo) {
+        this.userRepo = userRepo;
     }
-    async findCharity() {
-        return await this.charityRepo.find();
+    async findUsers() {
+        return await this.userRepo.find();
     }
-    async findCharitybyName(name) {
+    async findUsersById(id) {
         // Check for valid ID
-        let charityExists = !!(await this.charityRepo.count({ name }));
-        if (!charityExists) {
-            throw new rest_1.HttpErrors.BadRequest(`charity ${name} does not exist`);
+        let userExists = !!(await this.userRepo.count({ id }));
+        if (!userExists) {
+            throw new rest_1.HttpErrors.BadRequest(`user ID ${id} does not exist`);
         }
-        return await this.charityRepo.findName(name);
+        return await this.userRepo.findById(name);
     }
 };
 __decorate([
-    rest_1.get('/charity'),
+    rest_1.get('/users'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], CharityController.prototype, "findCharity", null);
+], CharityController.prototype, "findUsers", null);
 __decorate([
-    rest_1.get('/charity/{name}'),
-    __param(0, rest_1.param.path.string('name')),
+    rest_1.get('/users/{id}'),
+    __param(0, rest_1.param.path.number('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], CharityController.prototype, "findCharitybyName", null);
+], CharityController.prototype, "findUsersById", null);
 CharityController = __decorate([
     __param(0, repository_1.repository(repositories_1.CharityRepository)),
-    __metadata("design:paramtypes", [typeof (_a = typeof repositories_1.CharityRepository !== "undefined" && repositories_1.CharityRepository) === "function" && _a || Object])
+    __metadata("design:paramtypes", [repositories_1.CharityRepository])
 ], CharityController);
 exports.CharityController = CharityController;
-var _a;
 //# sourceMappingURL=charity.controller.js.map

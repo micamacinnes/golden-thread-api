@@ -3,31 +3,34 @@ import { Entity, property, model } from '@loopback/repository';
 @model()
 export class Charity extends Entity {
   @property({
-    type: 'string',
-    name: true,
+    type: 'number',
+    id: true,
   })
-  name?: string;
+  id?: number;
 
   @property({
     type: 'string',
-    required: true
   })
-  email: string;
+  firstname: number;
 
   @property({
     type: 'string',
-    required: true
   })
-  website: string;
+  lastname: number;
 
   @property({
     type: 'string',
     required: true,
   })
-  phonenumber: string;
+  email: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
 
-  getName() {
-    return this.name;
+  getId() {
+    return this.id;
   }
 }

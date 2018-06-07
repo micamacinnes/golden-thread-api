@@ -22,6 +22,10 @@ let UserController = class UserController {
     async findUsers() {
         return await this.userRepo.find();
     }
+    async getDonationsByUserID(userID, dateFrom) {
+        console.log(userID);
+        console.log(dateFrom);
+    }
     async findUsersById(id) {
         // Check for valid ID
         let userExists = !!(await this.userRepo.count({ id }));
@@ -37,6 +41,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "findUsers", null);
+__decorate([
+    rest_1.get('/users/{user_id}/donations'),
+    __param(0, rest_1.param.path.number('user_id')),
+    __param(1, rest_1.param.query.date('date_from')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Date]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getDonationsByUserID", null);
 __decorate([
     rest_1.get('/users/{id}'),
     __param(0, rest_1.param.path.number('id')),
